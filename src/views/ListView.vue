@@ -7,7 +7,8 @@
       </button>
       <div>
         <ul>
-          <li v-for="item in state.list" :key="item.seq" :seq="item.seq" @click="goDetail">
+          <li v-for="item in state.list" :key="item.seq" :seq="item.seq"
+            @click="goDetail(item.title, item.content, item.id, item.name)">
             {{ item.title }} / {{ item.name }}({{ item.id }}) /
             {{ item.date.substring(2, 4) }}-{{ item.date.substring(4, 6) }}-{{ item.date.substring(6, 8) }}
             <a v-if="item.id === store.getters.getUserId">(작성자)</a>
@@ -20,13 +21,15 @@
 
 <script setup lang="ts">
 import store from "@/store";
-import { IonPage, onIonViewWillEnter, onIonViewDidEnter } from "@ionic/vue";
+import { IonPage } from "@ionic/vue";
+import { onIonViewWillEnter, onIonViewDidEnter } from "@ionic/vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 
 interface List {
   seq: string,    // 게시물 seq
   title: string,  // 게시물 제목
+  content: string,// 게시물 내용
   name: string,   // 작성자 이름
   id: string,     // 작성자 id
   date: string,   // 작성일자
@@ -47,12 +50,12 @@ async function getData() {
 }
 
 // DetailView 화면으로 이동
-function goDetail() {
-  router.push({ name: 'Detail' });
+function goDetail(title: string, content: string, id: string, name: string) {
+  router.push({ name: 'Detail', query: { title: title, content: content, id: id, name: name } });
 }
 
 function test() {
-  const item: List = { seq: '4', title: '보고서 4', name: 'md', id: '3320', date: '20230421' };
+  const item: List = { seq: '4', title: '보고서 4', content: '보고서 내용 4', name: 'md', id: '3320', date: '20230421' };
 
   state.list.push(item);
 }
@@ -70,5 +73,4 @@ onIonViewDidEnter(async () => {
     store.dispatch('setPassFlag');
   }
 });
-
 </script>

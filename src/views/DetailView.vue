@@ -2,9 +2,11 @@
   <ion-page>
     <div>
       <h1>상세</h1>
-      <h3>{{ state.title }}</h3>
-      <h5>{{ state.content }}</h5>
-      <br>
+      <h4>{{ state.title }}</h4>
+      <a class="name">작성자 : {{ state.name }} ({{ state.id }})</a>
+      <hr color="gray">
+      <span>{{ state.content }}</span>
+      <br><br>
       <button @click="closePage">닫기</button>
       &nbsp;&nbsp;&nbsp;&nbsp;
       <button @click="passData">전달</button>
@@ -16,25 +18,29 @@
 import store from "@/store";
 import { IonPage, onIonViewWillEnter } from "@ionic/vue";
 import { reactive } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 interface Detail {
-  title: string,    // 제목
-  content: string,  // 내용
-  id: string,       // 게시물 Seq
+  title: string,    // 게시물 제목
+  content: string,  // 게시물 내용
+  id: string,       // 작성자 ID
+  name?: string,    // 작성자명
 }
 
+// 화면간의 이동 제어
 const router = useRouter();
-// 상세 데이터
+// 전달된 값을 꺼낼 때 사용
 const state: Detail = reactive({
-  title: '',
-  content: '',
-  id: '',
+  title: '',    // 게시물 제목
+  content: '',  // 게시물 내용
+  id: '',       // 작성자 ID
 });
+const route = useRoute();
 
-// 상세 데이터 반환
-async function getDetail() {
-  return (await fetch("mock/detail.json")).json()
+
+// detail.json 값 가져오기
+async function getData() {
+  return (await fetch('mock/detail.json')).json();
 }
 
 // 닫기
@@ -45,22 +51,26 @@ function closePage() {
 // 전달
 function passData() {
   // 작성자의 경우
-  if (store.getters.getUserId === state.id) {
+  if (store.getters.getUserId === route.query.id) {
     alert('전달 요청 완료');
     store.dispatch('setPassFlag');
   }
   // 작성자가 아닌 경우
-  else if (store.getters.getUserId !== state.id) {
-    alert('작성자만 전달 가능합니다')
+  else if (store.getters.getUserId !== route.query.id) {
+    alert('작성자만 전달 가능합니다');
   }
 }
 
-
 // 화면 진입 애니메이션 표시 전
 onIonViewWillEnter(async () => {
-  const res = await getDetail();
+  const res = await getData();
   state.title = res.body.title;
   state.content = res.body.content;
   state.id = res.body.id;
+
+  state.title = String(route.query.title);
+  state.content = String(route.query.content);
+  state.id = String(route.query.id);
+  state.name = String(route.query.name);
 });
 </script>

@@ -25,6 +25,7 @@ const router = useRouter();
 function goLogin() {
   if (id.value === "2103" || id.value === "0321") {       // 옳바른 ID를 입력했을 경우
     store.dispatch('setUserId', id.value);
+    store.dispatch('setLogin');
     goListView();
   } else if (id.value === undefined || id.value === '') { // ID 입력을 안했을 경우
     alert('ID를 입력해주세요.');
@@ -37,7 +38,6 @@ function goLogin() {
 
 // ListView 화면으로 이동
 function goListView() {
-  // router.push('/list');  // 상세화면 detail.json 사용 & 상세화면 fetch 사용
-  router.push('/list2');  // 상세화면 list.json 사용 & 상세화면 router query 사용
+  router.push('/list');
 }
 </script>
