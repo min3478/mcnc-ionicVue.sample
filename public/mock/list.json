@@ -9,19 +9,22 @@
 		"totalLength": "3",
 		"list": [{
       "seq": "1",
-			"title": "보고서",
+			"title": "보고서 1",
+			"content": "보고서 내용 1",
 			"name": "leo",
       "id": "1101",
 			"date": "20230525"
 		}, {
       "seq": "2",
-			"title": "보고서",
+			"title": "보고서 2",
+			"content": "보고서 내용 2",
 			"name": "mcnc",
       "id": "2103",
 			"date": "20230520"
 		}, {
       "seq": "3",
-			"title": "보고서",
+			"title": "보고서 3",
+			"content": "보고서 내용 3",
 			"name": "pad",
       "id": "3420",
 			"date": "20230421"

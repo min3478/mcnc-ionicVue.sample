@@ -1,62 +1,43 @@
 <template>
   <ion-page>
     <div>
-      <h1>Main View</h1>
-      <div><button @click="openPage">Open Sub</button></div>
-      <div><button @click="getList">Get List</button></div>
-      <div><button @click="getDetail">Get Detail</button></div>
+      <h1>로그인</h1>
+      <div>
+        <input type="text" maxlength="4" class="input-id" placeholder="ID" v-model="id" />
+        <br /><br />
+        <button @click="goLogin">접속</button>
+      </div>
     </div>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage } from '@ionic/vue';
-import { onIonViewWillEnter, onIonViewDidEnter, onIonViewWillLeave, onIonViewDidLeave } from '@ionic/vue';
-import { useRouter } from 'vue-router';
+import store from "@/store";
+import { IonPage } from "@ionic/vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
+const id = ref();
+id.value = "2103";
 const router = useRouter();
 
-// 화면 Open
-function openPage() {
-  router.push('/sub');
+// 유효성 체크
+function goLogin() {
+  if (id.value === "2103" || id.value === "0321") {       // 옳바른 ID를 입력했을 경우
+    store.dispatch('setUserId', id.value);
+    goListView();
+  } else if (id.value === undefined || id.value === '') { // ID 입력을 안했을 경우
+    alert('ID를 입력해주세요.');
+  } else if ((/[^0-9]/).test(id.value)) {                 // ID가 숫자가 아닐 경우
+    alert('올바르지 않은 ID입니다.');
+  } else {                                                // ID가 틀린 경우
+    alert('접속할 수 없는 ID입니다.');
+  }
 }
 
-// mock 데이터 조회
-function getList() {
-  fetch('/mock/list.json')
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      alert(JSON.stringify(data, null, '  '));
-    })
+// ListView 화면으로 이동
+function goListView() {
+  // router.push('/list');  // 상세화면 detail.json 사용 & 상세화면 fetch 사용
+  router.push('/list2');  // 상세화면 list.json 사용 & 상세화면 router query 사용
 }
-
-function getDetail() {
-  fetch('/mock/detail.json')
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      alert(JSON.stringify(data, null, '  '));
-    })
-}
-
-// 화면 진입 애니메이션 표시 전
-onIonViewWillEnter(() => {
-  console.log('> Main page will enter');
-});
-
-// 화면 진입 애니메이션 표시 후
-onIonViewDidEnter(() => {
-  console.log('> Main page did enter');
-});
-
-// 화면 떠나기 애니메이션 표시 전
-onIonViewWillLeave(() => {
-  console.log('> Main page will leave');
-});
-
-// 화면 떠나기 애니메이션 표시 후
-onIonViewDidLeave(() => {
-  console.log('> Main page did leave');
-});
 </script>
