@@ -1,7 +1,9 @@
 <template>
   <ion-page>
     <div>
-      <h1>로그인</h1>
+      <h1 v-if="envName === 'production'">로그인</h1>
+      <h1 v-else>로그인 (개발)</h1>
+
       <div>
         <input type="text" maxlength="4" class="input-id" placeholder="ID" v-model="id" />
         <br /><br />
@@ -20,6 +22,9 @@ import { useRouter } from "vue-router";
 const id = ref();
 id.value = "2103";
 const router = useRouter();
+
+// 환경 변수의 APP_NAME
+const envName = process.env.VUE_APP_NAME || '';
 
 // 유효성 체크
 function goLogin() {
