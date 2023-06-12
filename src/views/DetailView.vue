@@ -35,6 +35,7 @@ const state: Detail = reactive({
   content: '',  // 게시물 내용
   id: '',       // 작성자 ID
 });
+// 화면간의 데이터 이동
 const route = useRoute();
 
 
@@ -63,14 +64,29 @@ function passData() {
 
 // 화면 진입 애니메이션 표시 전
 onIonViewWillEnter(async () => {
-  const res = await getData();
-  state.title = res.body.title;
-  state.content = res.body.content;
-  state.id = res.body.id;
-
-  state.title = String(route.query.title);
-  state.content = String(route.query.content);
-  state.id = String(route.query.id);
-  state.name = String(route.query.name);
+  await getFetchData();
+  getQueryData();
 });
+
+// fetch값 state에 저장
+async function getFetchData(){
+  const res = await getData();
+  const {title, content, id} = res.body;
+  state.title = title;
+  state.content = content;
+  state.id = id;
+  console.log("1")
+}
+
+// query값 state에 저장
+function getQueryData(){
+  const {title, content, id, name} = route.query;
+  state.title = String(title);
+  state.content = String(content);
+  state.id = String(id);
+  if(String(name) != null && String(name) != undefined){
+    state.name = String(name);
+  }
+  console.log("2")
+}
 </script>
